@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      gra
+    </title>
+    <style>
+      .buttons {
+        width: 40px;
+        height: 40px;
+      }
+
+      .reset-button{
+        height: 40px;
+        width: 129px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <button class = "buttons" data-id="1"></button>
+    <button class = "buttons" data-id="2"></button>
+    <button class = "buttons" data-id="3"></button>
+    <p></p>
+    <button class = "buttons" data-id="4"></button>
+    <button class = "buttons" data-id="5"></button>
+    <button class = "buttons" data-id="6"></button>
+    <p></p>
+    <button class = "buttons" data-id="7"></button>
+    <button class = "buttons" data-id="8"></button>
+    <button class = "buttons" data-id="9"></button>
+    <p></p>
+  
+  <!--<div class="js-buttons"></div> -->
+
+    <button class = "js-reset-button reset-button" onclick="resetGame()">Reset game</button>
+
+    <div class ="js-ilość-gier">wynik:0</divclass></div>
+    <div class="js-koła-wynik">koła:0</div>
+    <div class="js-krzyże-wynik">krzyże:0</div>
+    
+    <script>
+
+      const lastMove = []; //tutaj bedzie definowany ostatni ruch
+      let basket = ['','','','','','','','','']; //tutaj na swoje miejsca wpadna wszysstkie buttony
+
+      let ilośćGier = document.querySelector('.js-ilość-gier')
+      let kołaWynik = document.querySelector('.js-koła-wynik')
+      let krzyżeWynik = document.querySelector('.js-krzyże-wynik')
+
+      let krzyżeWynikq = 0;
+      let ilośćGierq = 0;
+      let kołaWynikq = 0;
+      let ktozacznie = 0;
+
+      function ktoZaczyna(){
+        if(confirm('o zaczyna?')){
+         ktozacznie = 1; 
+        } 
+      }
+
+      ktoZaczyna();
+
+      allButtons = document.querySelectorAll('.buttons');
+      allButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const buttonId = button.dataset.id;
+          const clickedButton = document.querySelector(`[data-id="${buttonId}"]`);
+
+            if (clickedButton.innerHTML === ''){
+              clickedButton.innerHTML = actualMove();
+              basket[buttonId-1] = lastMove[lastMove.length-1];
+            }
+            isGameOver();  //czy jest remis?
+            gameDecided(); //jest rozstrzygniecie
+        });
+      });
+
+
+      function actualMove (){
+        let move = '';
+    
+        if(lastMove[lastMove.length-1] === 'x'){
+          move = 'o'
+          lastMove.push('o');
+        } else if(lastMove[lastMove.length-1] === 'o'){
+          move = 'x'
+          lastMove.push('x');
+        } else {
+          if(ktozacznie % 2 ===0){
+            move = 'x'
+            lastMove.push('x');
+          } else {move = 'o'
+            lastMove.push('o');
+        }}
+        return move;
+      }
+
+
+      function isGameOver (){
+        if(lastMove.length === 9){
+          alert('Remis');
+            resetGame();
+            ilośćGierq +=1;
+            ilośćGier.innerHTML = `wynik: ${ilośćGierq}`
+        }}
+
+        
+      function resetGame(){
+        if (confirm('Resetować?')){
+          allButtons.forEach((button) => {
+          const buttonId = button.dataset.id;
+          const clickedButton = document.querySelector(`[data-id="${buttonId}"]`);
+          clickedButton.innerHTML = "";
+          lastMove.length = 0;
+          ktozacznie++;
+          basket = ['','','','','','','','','']
+        });
+        }}
+      
+
+      function gameDecided () {
+          if(
+            basket[0] !== '' && basket[0] === basket[1] && basket[1] === basket[2]){
+            update(basket[0]);
+          } else if(
+            basket[3] !== '' && basket[3] === basket[4] && basket[4] === basket[5]){
+              update(basket[3]);
+            }else if (
+              basket[6] !== '' && basket[6] === basket[7] && basket[7] === basket[8]){
+                update(basket[6]);
+            }else if (
+              basket[0] !== '' && basket[0] === basket[3] && basket[3] === basket[6]){
+                update(basket[0]);
+              }else if (
+                basket[1] !== '' && basket[1] === basket[4] && basket[4] === basket[7]){
+                  update(basket[1]);
+                }else if (
+                  basket[2] !== '' && basket[2] === basket[5] && basket[5] === basket[8]){
+                    update(basket[2]);
+                  }else if (
+                    basket[0] !== '' && basket[0] === basket[4] && basket[4] === basket[8]){
+                      update(basket[0]);
+                    }else if(
+                      basket[2] !== '' && basket[2] === basket[4] && basket[4] === basket[6]){
+                        update(basket[2]);
+                      } 
+        }
+
+
+        function update (result) {
+          if (result === 'x'){
+            krzyżeWynikq++;
+            ilośćGierq++;
+            ilośćGier.innerHTML = `wynik: ${ilośćGierq}`
+            krzyżeWynik.innerHTML = `krzyże: ${krzyżeWynikq}`
+            alert(`Wygrały: x`)
+            resetGame();
+          }else if (result = 'o'){
+            kołaWynikq++;
+            ilośćGierq++;
+            ilośćGier.innerHTML = `wynik: ${ilośćGierq}`
+            kołaWynik.innerHTML = `koła: ${kołaWynikq}`
+            alert('wygrały: o');
+            resetGame();
+          }    
+        }
+/*
+        function generateButtonsHTML (){
+ const araj = [];
+
+ for(let i = 0; i<9; i++){
+ if (i%3===0 &&i !== 0) 
+ {araj.push('<p></p>')}
+araj.push(`<button class="buttons" data-id="${i+1}"></button>`)
+ }return araj.join('');
+}
+const przyciski = document.querySelector('.js-buttons');
+przyciski.innerHTML = generateButtonsHTML();
+*/
+    </script>
+  </body>
+</html>
